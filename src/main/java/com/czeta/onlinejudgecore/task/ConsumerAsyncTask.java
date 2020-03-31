@@ -2,7 +2,9 @@ package com.czeta.onlinejudgecore.task;
 
 import com.czeta.onlinejudge.enums.JudgeTypeEnum;
 import com.czeta.onlinejudgecore.machine.MachineClient;
+import com.czeta.onlinejudgecore.model.result.SubmitResultModel;
 import com.czeta.onlinejudgecore.mq.SubmitMessage;
+import com.czeta.onlinejudgecore.service.ProblemService;
 import com.czeta.onlinejudgecore.spider.SpiderClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +28,23 @@ public class ConsumerAsyncTask {
     @Autowired
     private MachineClient machineClient;
 
+    @Autowired
+    private ProblemService problemService;
+
     @Async
     public void task(SubmitMessage submitMessage) {
         log.info("current thread Id={}", Thread.currentThread().getId());
+        // 获取评测结果
+        SubmitResultModel submitResultModel = new SubmitResultModel();
         if (submitMessage.getJudgeType().equals(JudgeTypeEnum.JUDGE_SPIDER.getCode())) {
-            spiderClient.exec(submitMessage);
+            submitResultModel = spiderClient.exec(submitMessage);
         } else if (submitMessage.getJudgeType().equals(JudgeTypeEnum.JUDGE_MACHINE.getCode())) {
-            machineClient.exec(submitMessage);
+            submitResultModel = machineClient.exec(submitMessage);
         } else {
             // 容错统一处理
         }
+        // 获取评测结果后更新最终相关数据
+        problemService.refreshDataOfProblemAfterJudge(submitMessage, submitResultModel);
     }
 
 }

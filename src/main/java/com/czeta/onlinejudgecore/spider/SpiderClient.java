@@ -1,5 +1,6 @@
 package com.czeta.onlinejudgecore.spider;
 
+import com.czeta.onlinejudgecore.model.result.SubmitResultModel;
 import com.czeta.onlinejudgecore.mq.SubmitMessage;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SpiderClient {
-    public void exec(SubmitMessage submitMessage) {
-
+    public SubmitResultModel exec(SubmitMessage submitMessage) {
+        return null;
     }
 }

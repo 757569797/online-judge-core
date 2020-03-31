@@ -1,6 +1,7 @@
 package com.czeta.onlinejudgecore.service;
 
-import com.czeta.onlinejudge.model.param.SubmitResultModel;
+import com.czeta.onlinejudgecore.model.result.SubmitResultModel;
+import com.czeta.onlinejudgecore.mq.SubmitMessage;
 
 /**
  * @ClassName ProblemService
@@ -10,10 +11,10 @@ import com.czeta.onlinejudge.model.param.SubmitResultModel;
  * @Version 1.0
  */
 public interface ProblemService {
+
     /**
-     * 获取评测最终结果后，进行最后的更新数据
-     * @param submitResult
-     * @param userId
+     * 在获得最终评测结果之后，更新题目相关数据
+     * @param submitMessage
      */
-    void refreshSubmitProblem(SubmitResultModel submitResult, Long userId);
+    void refreshDataOfProblemAfterJudge(SubmitMessage submitMessage, SubmitResultModel submitResultModel);
 }

@@ -34,7 +34,7 @@ public class SubmitConsumer {
             Optional<?> kafkaMessage = Optional.ofNullable(record.value());
             if (kafkaMessage.isPresent()) {
                 SubmitMessage submitMessage = JSONObject.toJavaObject((JSONObject) JSONObject.parse((String) kafkaMessage.get()), SubmitMessage.class);
-                log.info("message={}", JSONObject.toJSONString(submitMessage));
+                log.info("submitMessage={}", JSONObject.toJSONString(submitMessage));
                 consumerAsyncTask.task(submitMessage);
             }
         }
