@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.czeta.onlinejudge.cache.model.CacheContestRankModel;
 import com.czeta.onlinejudge.cache.model.RankItemModel;
 import com.czeta.onlinejudge.dao.entity.*;
-import com.czeta.onlinejudge.enums.BaseStatusMsg;
 import com.czeta.onlinejudge.enums.SubmitStatus;
-import com.czeta.onlinejudge.utils.utils.AssertUtils;
 import com.czeta.onlinejudge.utils.utils.DateUtils;
 import com.czeta.onlinejudgecore.cache.ContestRankRedisService;
 import com.czeta.onlinejudgecore.dao.mapper.*;
@@ -105,8 +103,6 @@ public class ProblemServiceImpl implements ProblemService {
     private void refreshSubmitProblem(SubmitResultModel submitResult, Long userId) {
         // 校验参数：
         Problem problemInfo = problemMapper.selectById(submitResult.getProblemId());
-        AssertUtils.notNull(problemInfo, BaseStatusMsg.APIEnum.PARAM_ERROR, "题目不存在");
-        AssertUtils.isTrue(SubmitStatus.isContain(submitResult.getSubmitStatus()), BaseStatusMsg.APIEnum.PARAM_ERROR, "评测结果不合法");
         // 用户表
         SolvedProblem solvedProblem = solvedProblemMapper.selectOne(Wrappers.<SolvedProblem>lambdaQuery()
                 .eq(SolvedProblem::getUserId, userId)
@@ -133,7 +129,6 @@ public class ProblemServiceImpl implements ProblemService {
         }
         // 提交评测表
         Submit submit = submitMapper.selectById(submitResult.getSubmitId());
-        AssertUtils.notNull(submit, BaseStatusMsg.APIEnum.PARAM_ERROR, "提交评测信息不存在");
         submit.setTime(submitResult.getTime());
         submit.setMemory(submitResult.getMemory());
         submit.setSubmitStatus(submitResult.getSubmitStatus());

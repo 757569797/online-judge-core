@@ -1,5 +1,6 @@
 package com.czeta.onlinejudgecore.config;
 
+import com.czeta.onlinejudgecore.exception.ConsumerExceptionHandler;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +52,7 @@ public class AsyncConfig implements AsyncConfigurer {
 
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return null;
+        return new ConsumerExceptionHandler();
     }
 
 }

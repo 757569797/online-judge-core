@@ -7,9 +7,7 @@ import com.czeta.onlinejudge.cache.model.SubmitModel;
 import com.czeta.onlinejudge.consts.ContestRankRedisKeyConstant;
 import com.czeta.onlinejudge.consts.ContestRankScoreRule;
 import com.czeta.onlinejudge.dao.entity.*;
-import com.czeta.onlinejudge.enums.BaseStatusMsg;
 import com.czeta.onlinejudge.enums.SubmitStatus;
-import com.czeta.onlinejudge.utils.utils.AssertUtils;
 import com.czeta.onlinejudge.utils.utils.DateUtils;
 import com.czeta.onlinejudgecore.cache.ContestRankRedisService;
 import com.czeta.onlinejudgecore.dao.mapper.*;
@@ -158,7 +156,6 @@ public class ContestRankRedisServiceImpl implements ContestRankRedisService {
 
     @Override
     public boolean exists(Long contestId) {
-        AssertUtils.notNull(contestId, BaseStatusMsg.APIEnum.PARAM_ERROR, "缓存key的contestId为空，不合法");
         String str = String.valueOf(contestId);
         Object object = redisTemplate.opsForValue().get(String.format(ContestRankRedisKeyConstant.CONTEST_RANK, str));
         return object != null;

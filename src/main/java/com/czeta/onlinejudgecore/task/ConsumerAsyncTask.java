@@ -1,6 +1,8 @@
 package com.czeta.onlinejudgecore.task;
 
 import com.czeta.onlinejudge.enums.JudgeTypeEnum;
+import com.czeta.onlinejudge.utils.enums.IBaseStatusMsg;
+import com.czeta.onlinejudgecore.exception.ConsumerException;
 import com.czeta.onlinejudgecore.machine.MachineClient;
 import com.czeta.onlinejudgecore.model.result.SubmitResultModel;
 import com.czeta.onlinejudgecore.mq.SubmitMessage;

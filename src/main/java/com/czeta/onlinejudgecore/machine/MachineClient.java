@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @Version 1.0
  */
 @Slf4j
-@Transactional
 @Component
 public class MachineClient {
 
