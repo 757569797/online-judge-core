@@ -31,6 +31,7 @@
         <commons-net.version>3.6</commons-net.version>
         <commons-pool2.version>2.7.0</commons-pool2.version>
         <commons-text.version>1.8</commons-text.version>
+        <online-judge.version>0.1.0</online-judge.version>
     </properties>
 
     <dependencies>
@@ -101,6 +102,12 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
         <!-- Redis end -->
+        <!-- kafka begin -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <!-- kafka end -->
         <!-- log begin -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -167,7 +174,35 @@
             <version>${commons-pool2.version}</version>
         </dependency>
         <!-- tools end -->
+        <!-- online-judge begin -->
+        <dependency>
+            <groupId>com.czeta</groupId>
+            <artifactId>online-judge</artifactId>
+            <version>${online-judge.version}</version>
+        </dependency>
+        <!-- online-judge end -->
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profileActive>dev</profileActive>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profileActive>prod</profileActive>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>

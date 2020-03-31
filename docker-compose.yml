@@ -1,0 +1,48 @@
+# docker-compose部署过程：先将yml中本地化的文件夹创建好，并上传对应的文件，然后执行该yml文件创建并启动好容器。
+# 每次更新jar包或者其它本地化文件，需要restart容器。
+version: '3'
+services:
+  # zookeeper
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    restart: always
+  # kafka
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 39.97.183.91                     # 修改:宿主机IP
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://39.97.183.91:9092    # 修改:宿主机IP
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_CREATE_TOPICS: "topic-submit:3:0"
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    volumes:
+      - /etc/localtime:/etc/localtime # 指定容器时间为宿主机时间
+    restart: always
+  # online-judge core judge服务
+  onlinejudge-core:
+    image: java:8
+    container_name: onlinejudge-core
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - '8080:8080'
+    volumes:
+      - ~/data/onlinejudge-core/workspace/online-judge-core.jar:/data/online-judge-core.jar # jar包所在位置宿主机本地化
+      - /opt/logs/online-judge-core:/opt/logs/online-judge-core # 项目打印日志文件本地化
+      - /etc/localtime:/etc/localtime # 指定容器时间为宿主机时间
+    network_mode: 'host' # 将应用内访问容器localhost转为访问宿主机的localhost
+    command: [
+      'java',
+      '-Xmx200m',
+      '-jar',
+      '/data/online-judge-core.jar'
+    ]
+    restart: always

@@ -3,12 +3,12 @@
 ################################ 当前active环境 start ###############################
 spring:
   profiles:
-    active: dev
+    active: @profileActive@
 ################################ 当前active环境 end #################################
 
 ############################# jetty config start #############################
 server:
-  port: 8888
+  port: 8080
   servlet:
     context-path: /
   jetty:
@@ -110,6 +110,25 @@ spring:
         min-idle: 2
       shutdown-timeout: 3s
 ############################### Redis config end ##################################
+
+############################### kafka config start ###############################
+---
+spring:
+  kafka:
+    # 消费者
+    consumer:
+      group-id: consumer-group1 #消费组
+      auto-offset-reset: earliest #最早未被消费的offset
+      enable-auto-commit: true  #是否开启自动提交
+      auto-commit-interval: 1000  #自动提交的间隔时间
+      max-poll-records: 500  #批量消费一次最大拉取的数据量
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      type: batch # 设置为批量接受
+      concurrency: 3   #设置消费的线程数，设置为partition的个数
+      poll-timeout: 1500  #拉取超时时间，只限自动提交
+############################### kafka config end ##################################
 
 
 
