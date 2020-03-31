@@ -24,8 +24,8 @@ import java.util.Arrays;
  * @Date 2020/2/23 12:52
  * @Version 1.0
  */
-@EnableCaching
 @Configuration
+@EnableCaching
 public class RedisCacheConfig extends CachingConfigurerSupport {
 
     /**

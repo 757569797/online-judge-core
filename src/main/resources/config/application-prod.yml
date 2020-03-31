@@ -24,6 +24,4 @@ spring:
   kafka:
     # kafka代理地址
     bootstrap-servers: 39.97.183.91:9092
-    consumer:
-      group-id: consumer-group1 #消费组1
 ############################### kafka config end ###############################

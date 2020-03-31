@@ -16,8 +16,10 @@ import com.czeta.onlinejudgecore.dao.mapper.ContestRankMapper;
 import com.czeta.onlinejudgecore.dao.mapper.SubmitMapper;
 import com.czeta.onlinejudgecore.mq.SubmitMessage;
 import com.czeta.onlinejudgecore.service.ProblemService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Map;
@@ -29,6 +31,8 @@ import java.util.Map;
  * @Date 2020/3/30 15:05
  * @Version 1.0
  */
+@Slf4j
+@Transactional
 @Component
 public class MachineClient {
 
@@ -58,6 +62,7 @@ public class MachineClient {
         if ((int) (Math.random() * 2) == 1) {
             ac = true;
         }
+        log.info("ac={}", ac);
         Long contestId = submitMessage.getSourceId();
         Long userId = submitMessage.getUserId();
         if (submitMessage.getSourceId() != 0) {
@@ -104,6 +109,7 @@ public class MachineClient {
         submitResultModel.setSubmitStatus(ac ? SubmitStatus.ACCEPTED.getName() : SubmitStatus.WRONG_ANSWER.getName());
         submitResultModel.setMemory("2000kb");
         submitResultModel.setTime("2000ms");
+        log.info("submitResult={}", JSONObject.toJSONString(submitResultModel));
         problemService.refreshSubmitProblem(submitResultModel, userId);
     }
 }
