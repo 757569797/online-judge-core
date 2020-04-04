@@ -39,11 +39,11 @@ public class ConsumerAsyncTask {
         // 获取评测结果
         SubmitResultModel submitResultModel = new SubmitResultModel();
         if (submitMessage.getJudgeType().equals(JudgeTypeEnum.JUDGE_SPIDER.getCode())) {
-            submitResultModel = spiderClient.exec(submitMessage);
+            submitResultModel = spiderClient.execute(submitMessage);
         } else if (submitMessage.getJudgeType().equals(JudgeTypeEnum.JUDGE_MACHINE.getCode())) {
-            submitResultModel = machineClient.exec(submitMessage);
+            submitResultModel = machineClient.execute(submitMessage);
         } else {
-            // 容错统一处理
+            throw new ConsumerException(IBaseStatusMsg.APIEnum.PARAM_ERROR, "评测类型不合法");
         }
         // 获取评测结果后更新最终相关数据
         problemService.refreshDataOfProblemAfterJudge(submitMessage, submitResultModel);

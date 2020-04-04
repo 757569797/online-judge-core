@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MachineClient {
 
 
-    public SubmitResultModel exec(SubmitMessage submitMessage) {
+    public SubmitResultModel execute(SubmitMessage submitMessage) {
         // mock评测结果
         boolean ac = false;
         if ((int) (Math.random() * 2) == 1) {

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SpiderClient {
-    public SubmitResultModel exec(SubmitMessage submitMessage) {
+    public SubmitResultModel execute(SubmitMessage submitMessage) {
         return null;
     }
 }
