@@ -7,11 +7,11 @@ import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequest;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.seimicrawler.xpath.JXDocument;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -35,7 +35,7 @@ public class SpiderResponse {
     private String contentType;
     private String charSet;
     private Map<String, String> headers;
-    private JXDocument jxDocument;
+    private Document document;
     private JSONObject jsonObject;
     private String rawText;
 
@@ -57,7 +57,7 @@ public class SpiderResponse {
         if (spiderResponse.getContentType().equals(SpiderConstant.ContentType.JSON)) {
             spiderResponse.setJsonObject(JSONObject.parseObject(writer.toString()));
         } else if (spiderResponse.getContentType().equals(SpiderConstant.ContentType.HTML)){
-            spiderResponse.setJxDocument(JXDocument.create(writer.toString()));
+            spiderResponse.setDocument(Jsoup.parse(writer.toString()));
         }
         spiderResponse.setRawText(writer.toString());
         log.info("SpiderResponse={}", JSONObject.toJSONString(spiderResponse));

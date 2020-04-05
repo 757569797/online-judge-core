@@ -1,11 +1,11 @@
 package com.czeta.onlinejudgecore.spider.poj;
 
+import com.czeta.onlinejudgecore.annotation.SpiderName;
+import com.czeta.onlinejudgecore.spider.SpiderService;
 import com.czeta.onlinejudgecore.utils.spider.SpiderUtils;
 import com.czeta.onlinejudgecore.utils.spider.contants.SpiderConstant;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequest;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequestBody;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,13 +17,8 @@ import java.util.Map;
  * @Date 2020/4/4 16:15
  * @Version 1.0
  */
-@Component
-public class POJSpiderExecutor {
-    @Autowired
-    private POJResultSpider pojResultSpider;
-
-    @Autowired
-    private POJLoginSpider pojLoginSpider;
+@SpiderName(name = "POJ")
+public class POJSpiderExecutor implements SpiderService {
 
     /**
      * 定时登录任务，保持着登录状态
@@ -38,7 +33,7 @@ public class POJSpiderExecutor {
         SpiderRequest spiderRequest = SpiderRequest.build("http://poj.org/login");
         spiderRequest.setMethod(SpiderConstant.Method.POST);
         spiderRequest.setSpiderRequestBody(SpiderRequestBody.form(map, "utf-8"));
-        SpiderUtils.exec(spiderRequest, pojLoginSpider);
+        SpiderUtils.exec(spiderRequest, new POJLoginSpider());
         endTime = System.currentTimeMillis();
         System.out.println("登录结束，耗时约" + ((endTime - startTime) + "ms"));
     }
@@ -60,9 +55,14 @@ public class POJSpiderExecutor {
         SpiderRequest request = new SpiderRequest("http://poj.org/submit");
         request.setMethod(SpiderConstant.Method.POST);
         request.setSpiderRequestBody(SpiderRequestBody.form(map, "utf-8"));
-        request.addCookie(POJLoginSpider.J_SESSION_ID, pojLoginSpider.sessionId);
-        SpiderUtils.exec(request, pojResultSpider);
+        request.addCookie(POJLoginSpider.J_SESSION_ID, POJLoginSpider.sessionId);
+        SpiderUtils.exec(request, new POJResultSpider());
         endTime = System.currentTimeMillis();
         System.out.println("提交结束，耗时约" + ((endTime - startTime) + "ms"));
+    }
+
+    @Override
+    public Object execute(Object obj) {
+        return null;
     }
 }

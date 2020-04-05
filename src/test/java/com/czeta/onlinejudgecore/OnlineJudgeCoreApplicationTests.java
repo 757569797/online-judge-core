@@ -2,7 +2,9 @@ package com.czeta.onlinejudgecore;
 
 import com.alibaba.fastjson.JSONObject;
 import com.czeta.onlinejudgecore.dao.mapper.UserMapper;
+import com.czeta.onlinejudgecore.spider.TestSpider;
 import com.czeta.onlinejudgecore.spider.poj.POJLoginSpider;
+import com.czeta.onlinejudgecore.spider.poj.POJResultSpider;
 import com.czeta.onlinejudgecore.spider.poj.POJSpiderExecutor;
 import com.czeta.onlinejudgecore.utils.spider.SpiderUtils;
 import com.czeta.onlinejudgecore.utils.spider.contants.SpiderConstant;
@@ -25,6 +27,9 @@ class OnlineJudgeCoreApplicationTests {
     @Autowired
     private POJSpiderExecutor pojSpider;
 
+    @Autowired
+    private POJResultSpider pojResultSpider;
+
     @Test
     void contextLoads() {
         System.out.println(JSONObject.toJSONString(userMapper.selectById(1)));
@@ -36,21 +41,24 @@ class OnlineJudgeCoreApplicationTests {
         pojSpider.submitCode("1000", str, "2");
     }
 
+
+    @Test
+    void getMessage() throws Exception {
+        SpiderRequest spiderRequest = SpiderRequest.build("https://www.nowcoder.com/practice/abc3fe2ce8e146608e868a70efebf62e?tpId=13&tqId=11154&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking");
+        spiderRequest.setMethod(SpiderConstant.Method.GET);
+        SpiderUtils.exec(spiderRequest, new TestSpider());
+    }
+
     @Test
     void test() {
         long startTime, endTime;
-        System.out.println("开始登录");
+        System.out.println("开始");
         startTime = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>();
-        map.put("user_id1", "pojspider1");
-        map.put("password1", "123123");
-        SpiderRequest spiderRequest = SpiderRequest.build("http://poj.org/login");
-        spiderRequest.setMethod(SpiderConstant.Method.POST);
-        spiderRequest.setSpiderRequestBody(SpiderRequestBody.form(map, "utf-8"));
-        POJLoginSpider POJLoginSpider = new POJLoginSpider();
-        SpiderUtils.exec(spiderRequest, POJLoginSpider);
+        SpiderRequest spiderRequest = SpiderRequest.build("http://poj.org/status");
+        spiderRequest.setMethod(SpiderConstant.Method.GET);
+        SpiderUtils.exec(spiderRequest, pojResultSpider);
         endTime = System.currentTimeMillis();
-        System.out.println("登录结束，耗时约" + ((endTime - startTime) + "ms"));
+        System.out.println("结束，耗时约" + ((endTime - startTime) + "ms"));
     }
 
 }
