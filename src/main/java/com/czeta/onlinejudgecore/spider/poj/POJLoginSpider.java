@@ -16,8 +16,9 @@ public class POJLoginSpider implements SpiderPageProcessor {
     public static volatile String sessionId;
 
     @Override
-    public void process(SpiderResponse response) {
+    public Object process(SpiderResponse response) {
         String s = response.getHeaders().get(SET_COOKIE);
         sessionId = s.substring(s.indexOf("=") + 1, s.indexOf(";"));
+        return null;
     }
 }

@@ -1,13 +1,14 @@
 package com.czeta.onlinejudgecore.utils.spider;
 
-import com.alibaba.fastjson.JSONObject;
+import com.czeta.onlinejudge.enums.BaseStatusMsg;
+import com.czeta.onlinejudgecore.exception.SpiderRuntimeException;
 import com.czeta.onlinejudgecore.utils.spider.contants.SpiderConstant;
 import com.czeta.onlinejudgecore.utils.spider.processor.SpiderPageProcessor;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequest;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequestBody;
 import com.czeta.onlinejudgecore.utils.spider.response.SpiderResponse;
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -29,13 +30,14 @@ import java.util.Map;
  * @Date 2020/4/4 12:01
  * @Version 1.0
  */
+@Slf4j
 public class SpiderUtils {
     /**
      *
      * @param request 请求信息
      * @param processor 响应的回调处理函数
      */
-    public static void exec(SpiderRequest request, SpiderPageProcessor processor) {
+    public static Object exec(SpiderRequest request, SpiderPageProcessor processor) {
         // 初始化client
         CloseableHttpClient httpClient = initHttpClient(request);
         CloseableHttpResponse response = null;
@@ -66,19 +68,14 @@ public class SpiderUtils {
                 redirectRequest.setUrl(spiderResponse.getHeaders().get("Location"));
                 redirectRequest.setMethod(SpiderConstant.Method.GET);
                 redirectRequest.setCookies(request.getCookies());
-                exec(redirectRequest, processor);
+                return exec(redirectRequest, processor);
             } else {
                 // 回调函数处理页面
-                processor.process(spiderResponse);
+                return processor.process(spiderResponse);
             }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("SpiderUtils exec Exception={} StackTrace={}", e.getMessage(), ExceptionUtils.getStackTrace(e));
+            throw new SpiderRuntimeException(BaseStatusMsg.APIEnum.FAILED, "爬取失败");
         } finally {
             try {
                 // 释放资源

@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
  * @Version 1.0
  */
 @Slf4j
-public class ConsumerExceptionHandler implements AsyncUncaughtExceptionHandler {
+public class ConsumerRuntimeExceptionHandler implements AsyncUncaughtExceptionHandler {
     @Override
     public void handleUncaughtException(Throwable throwable, Method method, Object... objects) {
         log.error("Async任务异常处理方法:方法名={} 异常信息={}", method.getName(), ExceptionUtils.getStackTrace(throwable));

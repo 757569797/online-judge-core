@@ -9,4 +9,6 @@ package com.czeta.onlinejudgecore.spider;
  */
 public interface SpiderService {
     Object execute(Object obj);
+
+    Object getResult(Object obj);
 }

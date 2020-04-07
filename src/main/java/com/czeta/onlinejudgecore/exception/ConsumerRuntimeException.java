@@ -10,34 +10,34 @@ import com.czeta.onlinejudge.utils.exception.IBaseException;
  * @Date 2020/3/31 19:46
  * @Version 1.0
  */
-public class ConsumerException  extends RuntimeException implements IBaseException {
+public class ConsumerRuntimeException extends RuntimeException implements IBaseException {
     private Integer code;
     private String message;
 
-    public ConsumerException() {}
+    public ConsumerRuntimeException() {}
 
-    public ConsumerException(Integer code, String message) {
+    public ConsumerRuntimeException(Integer code, String message) {
         this.code = code;
         this.message = message;
     }
 
-    public ConsumerException(IBaseStatusMsg statusMsg) {
+    public ConsumerRuntimeException(IBaseStatusMsg statusMsg) {
         this.code = statusMsg.getCode();
         this.message = statusMsg.getMessage();
     }
 
-    public ConsumerException(IBaseStatusMsg statusMsg, String message) {
+    public ConsumerRuntimeException(IBaseStatusMsg statusMsg, String message) {
         this.code = statusMsg.getCode();
         this.message = message == null ? statusMsg.getMessage() : message;
     }
 
-    public ConsumerException(Throwable cause) {
+    public ConsumerRuntimeException(Throwable cause) {
         super(cause);
         this.code = IBaseStatusMsg.APIEnum.SERVER_ERROR.getCode();
         this.message = cause.getMessage() == null ? IBaseStatusMsg.APIEnum.SERVER_ERROR.getMessage() : cause.getMessage();
     }
 
-    public ConsumerException(Throwable cause, String message) {
+    public ConsumerRuntimeException(Throwable cause, String message) {
         super(message, cause);
         this.code = IBaseStatusMsg.APIEnum.SERVER_ERROR.getCode();
         this.message = message;

@@ -1,6 +1,5 @@
 package com.czeta.onlinejudgecore.utils.spider.request;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.HashMap;

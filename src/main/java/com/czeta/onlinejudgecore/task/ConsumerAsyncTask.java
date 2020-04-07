@@ -2,7 +2,7 @@ package com.czeta.onlinejudgecore.task;
 
 import com.czeta.onlinejudge.enums.JudgeTypeEnum;
 import com.czeta.onlinejudge.utils.enums.IBaseStatusMsg;
-import com.czeta.onlinejudgecore.exception.ConsumerException;
+import com.czeta.onlinejudgecore.exception.ConsumerRuntimeException;
 import com.czeta.onlinejudgecore.machine.MachineClient;
 import com.czeta.onlinejudgecore.model.result.SubmitResultModel;
 import com.czeta.onlinejudgecore.mq.SubmitMessage;
@@ -43,7 +43,7 @@ public class ConsumerAsyncTask {
         } else if (submitMessage.getJudgeType().equals(JudgeTypeEnum.JUDGE_MACHINE.getCode())) {
             submitResultModel = machineClient.execute(submitMessage);
         } else {
-            throw new ConsumerException(IBaseStatusMsg.APIEnum.PARAM_ERROR, "评测类型不合法");
+            throw new ConsumerRuntimeException(IBaseStatusMsg.APIEnum.PARAM_ERROR, "评测类型不合法");
         }
         // 获取评测结果后更新最终相关数据
         problemService.refreshDataOfProblemAfterJudge(submitMessage, submitResultModel);

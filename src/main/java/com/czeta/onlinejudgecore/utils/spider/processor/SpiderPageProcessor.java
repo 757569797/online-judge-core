@@ -10,5 +10,5 @@ import com.czeta.onlinejudgecore.utils.spider.response.SpiderResponse;
  * @Version 1.0
  */
 public interface SpiderPageProcessor {
-    void process(SpiderResponse response);
+    Object process(SpiderResponse response);
 }

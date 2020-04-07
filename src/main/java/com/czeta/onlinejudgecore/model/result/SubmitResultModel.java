@@ -16,4 +16,8 @@ public class SubmitResultModel {
     private String time;
     private String memory;
     private String submitStatus;
+
+    // 用来修复目标OJ状态还是PENDING的状态
+    private Boolean pending;
+    private String spiderSubmitId;
 }

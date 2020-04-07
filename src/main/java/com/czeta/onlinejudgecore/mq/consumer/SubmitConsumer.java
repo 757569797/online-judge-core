@@ -6,6 +6,7 @@ import com.czeta.onlinejudgecore.task.ConsumerAsyncTask;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,7 @@ import java.util.Optional;
 @Slf4j
 public class SubmitConsumer {
     private static final String TOPIC_NAME = "topic-submit";
+    private static final String DEV_TOPIC_NAME = "topic-submit-dev";
 
     @Autowired
     private ConsumerAsyncTask consumerAsyncTask;

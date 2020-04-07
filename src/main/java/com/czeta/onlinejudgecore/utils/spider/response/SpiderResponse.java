@@ -60,7 +60,7 @@ public class SpiderResponse {
             spiderResponse.setDocument(Jsoup.parse(writer.toString()));
         }
         spiderResponse.setRawText(writer.toString());
-        log.info("SpiderResponse={}", JSONObject.toJSONString(spiderResponse));
+//        log.info("SpiderResponse={}", JSONObject.toJSONString(spiderResponse));
         return spiderResponse;
     }
 }

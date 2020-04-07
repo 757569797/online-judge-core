@@ -1,14 +1,16 @@
 package com.czeta.onlinejudgecore.spider.poj;
 
 import com.czeta.onlinejudgecore.annotation.SpiderName;
+import com.czeta.onlinejudgecore.model.result.SubmitResultModel;
+import com.czeta.onlinejudgecore.mq.SubmitMessage;
 import com.czeta.onlinejudgecore.spider.SpiderService;
 import com.czeta.onlinejudgecore.utils.spider.SpiderUtils;
 import com.czeta.onlinejudgecore.utils.spider.contants.SpiderConstant;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequest;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequestBody;
+import javafx.util.Pair;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @ClassName POJSpiderExecutor
@@ -19,6 +21,17 @@ import java.util.Map;
  */
 @SpiderName(name = "POJ")
 public class POJSpiderExecutor implements SpiderService {
+    private static List<Pair<String, String>> account = new ArrayList<Pair<String, String>>() {{
+        add(new Pair<>("pojspider1", "123123"));
+        add(new Pair<>("pojvegetableno1", "123123"));
+        add(new Pair<>("pojvegetableno2", "123123"));
+    }};
+
+    private static Map<String, String> languageMap = new HashMap<String, String>() {{
+        put("C", "5");
+        put("C++", "4");
+        put("Java", "2");
+    }};
 
     /**
      * 定时登录任务，保持着登录状态
@@ -28,8 +41,10 @@ public class POJSpiderExecutor implements SpiderService {
         System.out.println("开始登录");
         startTime = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>();
-        map.put("user_id1", "pojspider1");
-        map.put("password1", "123123");
+        // 随机选取账号
+        int index = (int) (Math.random() * account.size());
+        map.put("user_id1", account.get(index).getKey());
+        map.put("password1", account.get(index).getValue());
         SpiderRequest spiderRequest = SpiderRequest.build("http://poj.org/login");
         spiderRequest.setMethod(SpiderConstant.Method.POST);
         spiderRequest.setSpiderRequestBody(SpiderRequestBody.form(map, "utf-8"));
@@ -38,31 +53,38 @@ public class POJSpiderExecutor implements SpiderService {
         System.out.println("登录结束，耗时约" + ((endTime - startTime) + "ms"));
     }
 
-    /**
-     * 测试提交代码
-     */
-    public void submitCode(String problemId, String code, String language) {
-        loginTask();
-        long startTime, endTime;
-        System.out.println("开始提交");
-        startTime = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>();
-        map.put("problem_id", problemId);
-        map.put("source", code);
-        map.put("language", language);
-        map.put("submit", "Submit");
-        map.put("encoded", 1);
-        SpiderRequest request = new SpiderRequest("http://poj.org/submit");
-        request.setMethod(SpiderConstant.Method.POST);
-        request.setSpiderRequestBody(SpiderRequestBody.form(map, "utf-8"));
-        request.addCookie(POJLoginSpider.J_SESSION_ID, POJLoginSpider.sessionId);
-        SpiderUtils.exec(request, new POJResultSpider());
-        endTime = System.currentTimeMillis();
-        System.out.println("提交结束，耗时约" + ((endTime - startTime) + "ms"));
+    @Override
+    public Object getResult(Object obj) {
+        String spiderSubmitId = (String) obj;
+        // 爬取结果
+        SpiderRequest request = new SpiderRequest("http://poj.org/status");
+        request.setMethod(SpiderConstant.Method.GET);
+        POJResultSpider spiderProcess = new POJResultSpider();
+        spiderProcess.setSpiderSubmitId(spiderSubmitId);
+        return SpiderUtils.exec(request, spiderProcess);
     }
+
 
     @Override
     public Object execute(Object obj) {
-        return null;
+        loginTask();
+        SubmitMessage submitMessage = (SubmitMessage) obj;
+        Map<String, Object> formMap = new HashMap<String, Object>() {{
+            put("problem_id", submitMessage.getSpiderProblemId());
+            put("source", submitMessage.getCode());
+            put("language", languageMap.get(submitMessage.getLanguage()));
+            put("submit", "Submit");
+            put("encoded", 1);
+        }};
+        SpiderRequest request = new SpiderRequest("http://poj.org/submit");
+        request.setMethod(SpiderConstant.Method.POST);
+        request.setSpiderRequestBody(SpiderRequestBody.form(formMap, "utf-8"));
+        request.addCookie(POJLoginSpider.J_SESSION_ID, POJLoginSpider.sessionId);
+        SubmitResultModel submitResultModel = (SubmitResultModel) SpiderUtils.exec(request, new POJResultSpider());
+        // 修复目标OJ状态还是PENDING的状态
+        while (submitResultModel.getPending()) {
+            submitResultModel = (SubmitResultModel) this.getResult(submitResultModel.getSpiderSubmitId());
+        }
+        return submitResultModel;
     }
 }

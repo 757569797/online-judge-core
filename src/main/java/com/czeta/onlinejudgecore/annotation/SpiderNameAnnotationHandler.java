@@ -1,6 +1,7 @@
 package com.czeta.onlinejudgecore.annotation;
 
 import com.czeta.onlinejudgecore.spider.SpiderService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.reflections.Reflections;
@@ -18,13 +19,14 @@ import java.util.Set;
  * @Version 1.0
  */
 @Slf4j
+@Data
 @Component
 public class SpiderNameAnnotationHandler {
     // 爬虫名称与爬虫实例的映射，实现横向扩展
-    public Map<String, SpiderService> spiderServiceMap = new HashMap<>();
+    public final Map<String, SpiderService> spiderServiceMap = new HashMap<>();
 
     {
-        Reflections reflections = new Reflections("com.czeta.onlinejudge.spider");
+        Reflections reflections = new Reflections("com.czeta.onlinejudgecore.spider");
         Set<Class<?>> services =
                 reflections.getTypesAnnotatedWith(SpiderName.class);
         for (Class<?> serviceClass : services) {
@@ -37,4 +39,6 @@ public class SpiderNameAnnotationHandler {
                 log.error("SpiderNameAnnotationHandler IllegalAccessException Exception={} StackTrace={}", e.getMessage(), ExceptionUtils.getStackTrace(e)); }
         }
     }
+
+
 }
