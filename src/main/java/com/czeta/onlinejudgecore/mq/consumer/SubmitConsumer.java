@@ -24,7 +24,6 @@ import java.util.Optional;
 @Slf4j
 public class SubmitConsumer {
     private static final String TOPIC_NAME = "topic-submit";
-    private static final String DEV_TOPIC_NAME = "topic-submit-dev";
 
     @Autowired
     private ConsumerAsyncTask consumerAsyncTask;

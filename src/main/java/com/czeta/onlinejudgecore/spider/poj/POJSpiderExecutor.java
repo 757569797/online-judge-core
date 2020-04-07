@@ -8,7 +8,8 @@ import com.czeta.onlinejudgecore.utils.spider.SpiderUtils;
 import com.czeta.onlinejudgecore.utils.spider.contants.SpiderConstant;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequest;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequestBody;
-import javafx.util.Pair;
+import org.springframework.data.util.Pair;
+
 
 import java.util.*;
 
@@ -22,9 +23,9 @@ import java.util.*;
 @SpiderName(name = "POJ")
 public class POJSpiderExecutor implements SpiderService {
     private static List<Pair<String, String>> account = new ArrayList<Pair<String, String>>() {{
-        add(new Pair<>("pojspider1", "123123"));
-        add(new Pair<>("pojvegetableno1", "123123"));
-        add(new Pair<>("pojvegetableno2", "123123"));
+        add(Pair.of("pojspider1", "123123"));
+        add(Pair.of("pojvegetableno1", "123123"));
+        add(Pair.of("pojvegetableno2", "123123"));
     }};
 
     private static Map<String, String> languageMap = new HashMap<String, String>() {{
@@ -43,8 +44,8 @@ public class POJSpiderExecutor implements SpiderService {
         Map<String, Object> map = new HashMap<>();
         // 随机选取账号
         int index = (int) (Math.random() * account.size());
-        map.put("user_id1", account.get(index).getKey());
-        map.put("password1", account.get(index).getValue());
+        map.put("user_id1", account.get(index).getFirst());
+        map.put("password1", account.get(index).getSecond());
         SpiderRequest spiderRequest = SpiderRequest.build("http://poj.org/login");
         spiderRequest.setMethod(SpiderConstant.Method.POST);
         spiderRequest.setSpiderRequestBody(SpiderRequestBody.form(map, "utf-8"));
