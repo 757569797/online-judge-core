@@ -36,7 +36,7 @@ public class JudgeMachineController {
 
     @PostMapping("/reportHeartbeat")
     public HeartbeatResultModel reportHeartbeat(@RequestBody HeartbeatModel heartbeatModel) {
-        judgeService.updateOrSaveJudgeMachineByHeartbeat(heartbeatModel);
+        judgeService.initOrUpdateJudgeMachineByHeartbeat(heartbeatModel);
         return new HeartbeatResultModel();
     }
 

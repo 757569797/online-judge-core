@@ -58,7 +58,7 @@ public class POJResultSpider implements SpiderPageProcessor {
         }
         SubmitResultModel submitResultModel = new SubmitResultModel();
         // 如果最终评测状态还未确定，则这里需要做个标记，供上层继续访问最终评测状态直到结果出来。
-        if ("Running & Judging".equals(result) || "Compiling".equals(result)) {
+        if ("Running & Judging".equals(result) || "Compiling".equals(result) || "Waiting".equals(result)) {
             submitResultModel.setPending(true);
             submitResultModel.setSpiderSubmitId(submitId);
             return submitResultModel;

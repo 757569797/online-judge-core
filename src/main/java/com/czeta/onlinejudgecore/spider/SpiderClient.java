@@ -6,6 +6,7 @@ import com.czeta.onlinejudgecore.annotation.SpiderNameAnnotationHandler;
 import com.czeta.onlinejudgecore.exception.SpiderRuntimeException;
 import com.czeta.onlinejudgecore.model.result.SubmitResultModel;
 import com.czeta.onlinejudgecore.mq.SubmitMessage;
+import com.czeta.onlinejudgecore.service.JudgeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class SpiderClient {
     @Autowired
     private SpiderNameAnnotationHandler spiderHandler;
 
+    @Autowired
+    private JudgeService judgeService;
+
     public SubmitResultModel execute(SubmitMessage submitMessage) {
         SubmitResultModel submitResultModel = new SubmitResultModel();
         try {
@@ -38,6 +42,8 @@ public class SpiderClient {
             // 容错处理
             submitResultModel.setSubmitStatus(SubmitStatus.SYSTEM_ERROR.getName());
         }
+        // 更新爬虫评测方式表（心跳）
+        judgeService.updateJudgeSpiderByHeartbeatCheck(submitMessage.getJudgeName());
         submitResultModel.setSubmitId(submitMessage.getSubmitId());
         submitResultModel.setProblemId(submitMessage.getProblemId());
         return submitResultModel;

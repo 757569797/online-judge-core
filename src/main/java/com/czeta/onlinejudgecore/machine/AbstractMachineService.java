@@ -19,12 +19,10 @@ import java.util.List;
  * @Version 1.0
  */
 public abstract class AbstractMachineService {
-
-
     private volatile static int index = 0;
 
     public SubmitResultModel execute(SubmitMessage submitMessage) throws Exception {
-        // 根据评测机名称获取该评测机所部署的全部机器url，并通过负载均衡(轮询算法)获取合适的机器信息
+        // 根据评测机名称获取该评测机所部署的全部机器url，并通过负载均衡(轮询算法)获取合适的机器信息 todo 负载均衡选择评测机，加权轮询算法
         JudgeType targetJudgeMachine = null;
         synchronized (this) {
             List<JudgeType> judgeTypeList = submitMessage.getJudgeTypeList();

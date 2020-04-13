@@ -8,7 +8,6 @@ import com.czeta.onlinejudgecore.utils.spider.SpiderUtils;
 import com.czeta.onlinejudgecore.utils.spider.consts.SpiderConstant;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequest;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequestBody;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.data.util.Pair;
 
 
@@ -23,6 +22,12 @@ import java.util.*;
  */
 @SpiderName(name = "POJ")
 public class POJSpiderExecutor implements SpiderService {
+
+    // 爬虫名称
+    public static final String spiderName = "POJ";
+    // 爬虫url
+    public static final String spiderUrl = "http://poj.org";
+
     private static List<Pair<String, String>> account = new ArrayList<Pair<String, String>>() {{
         add(Pair.of("pojspider1", "123123"));
         add(Pair.of("pojvegetableno1", "123123"));
@@ -36,8 +41,9 @@ public class POJSpiderExecutor implements SpiderService {
     }};
 
     /**
-     * 定时登录任务，保持着登录状态
+     * 定时登录任务，保持着登录状态，每20分钟登录一次
      */
+//    @Scheduled(fixedRate = 1000*60*20)
     private void loginTask() {
         long startTime, endTime;
         System.out.println("开始登录");
