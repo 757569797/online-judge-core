@@ -2,7 +2,7 @@ package com.czeta.onlinejudgecore.utils.spider.response;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.czeta.onlinejudgecore.utils.spider.contants.SpiderConstant;
+import com.czeta.onlinejudgecore.utils.spider.consts.SpiderConstant;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequest;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +45,12 @@ public class SpiderResponse {
         spiderResponse.setStatusCode(response.getStatusLine().getStatusCode());
         HttpEntity entity = response.getEntity();
         String contentTypeStr = entity.getContentType().getValue();
-        spiderResponse.setContentType(contentTypeStr.substring(0, contentTypeStr.indexOf(";")));
-        spiderResponse.setCharSet(contentTypeStr.substring(contentTypeStr.lastIndexOf("=") + 1));
+        if (contentTypeStr.equals(SpiderConstant.ContentType.JSON)) {
+            spiderResponse.setContentType(contentTypeStr);
+        } else {
+            spiderResponse.setContentType(contentTypeStr.substring(0, contentTypeStr.indexOf(";")));
+            spiderResponse.setCharSet(contentTypeStr.substring(contentTypeStr.lastIndexOf("=") + 1));
+        }
         Map<String, String> headers = new HashMap<>();
         for (Header h : response.getAllHeaders()) {
             headers.put(h.getName(), h.getValue());

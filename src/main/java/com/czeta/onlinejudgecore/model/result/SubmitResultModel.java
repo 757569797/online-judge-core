@@ -17,7 +17,10 @@ public class SubmitResultModel {
     private String memory;
     private String submitStatus;
 
-    // 用来修复目标OJ状态还是PENDING的状态
+    // 评测机评测的额外详情结果（针对每个评测样例的，格式为json格式：{ "msg":{...}, "code": }
+    private String msgJson;
+
+    // 用来修复爬虫评测方式下，目标OJ状态还是PENDING的状态
     private Boolean pending;
     private String spiderSubmitId;
 }

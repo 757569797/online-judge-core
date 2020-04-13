@@ -35,8 +35,8 @@ services:
     ports:
       - '8888:8888'
     volumes:
-      - ~/data/onlinejudge-core/workspace/online-judge-core.jar:/data/online-judge-core.jar # jar包所在位置宿主机本地化
-      - /opt/logs/online-judge-core:/opt/logs/online-judge-core # 项目打印日志文件本地化
+      - ~/data/onlinejudgecore/workspace/online-judge-core.jar:/data/online-judge-core.jar # jar包所在位置宿主机本地化
+      - ~/data/onlinejudgecore/logs:/opt/logs/online-judge-core # 项目打印日志文件本地化
       - /etc/localtime:/etc/localtime # 指定容器时间为宿主机时间
     network_mode: 'host' # 将应用内访问容器localhost转为访问宿主机的localhost
     command: [
@@ -46,3 +46,40 @@ services:
       '/data/online-judge-core.jar'
     ]
     restart: always
+  # 评测机服务
+  judge-machine:
+    image: registry.cn-hangzhou.aliyuncs.com/onlinejudge/judge_server
+    container_name: judge-machine
+    restart: always
+    read_only: true
+    cap_drop:
+      - SETPCAP
+      - MKNOD
+      - NET_BIND_SERVICE
+      - SYS_CHROOT
+      - SETFCAP
+      - FSETID
+    tmpfs:
+      - /tmp
+    volumes:
+      - ~/data/judge_machine/test_case:/test_case:ro
+      - ~/data/judge_machine/logs:/log
+      - ~/data/judge_machine/run:/judger
+    environment:
+      - SERVICE_URL=http://39.97.183.91:8080
+      - BACKEND_URL=http://39.97.183.91:8888/api/reportHeartbeat/
+      - TOKEN=JUDGE_MACHINE_TOKEN
+    ports:
+      - "8080:8080"
+  # 评测文件备份文件夹 rsync slave服务
+  rsync-slave:
+    image: registry.cn-hangzhou.aliyuncs.com/onlinejudge/oj_rsync
+    container_name: rsync-slave
+    volumes:
+      - ~/data/judge_machine/test_case:/test_case
+      - ~/data/rsync_slave:/log
+    environment:
+      - RSYNC_MODE=slave
+      - RSYNC_USER=ojrsync
+      - RSYNC_PASSWORD=123123
+      - RSYNC_MASTER_ADDR=121.36.21.111

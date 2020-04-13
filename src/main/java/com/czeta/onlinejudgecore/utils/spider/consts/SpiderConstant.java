@@ -1,4 +1,4 @@
-package com.czeta.onlinejudgecore.utils.spider.contants;
+package com.czeta.onlinejudgecore.utils.spider.consts;
 
 /**
  * @ClassName HttpConstant

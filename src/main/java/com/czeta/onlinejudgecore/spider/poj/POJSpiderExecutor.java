@@ -5,9 +5,10 @@ import com.czeta.onlinejudgecore.model.result.SubmitResultModel;
 import com.czeta.onlinejudgecore.mq.SubmitMessage;
 import com.czeta.onlinejudgecore.spider.SpiderService;
 import com.czeta.onlinejudgecore.utils.spider.SpiderUtils;
-import com.czeta.onlinejudgecore.utils.spider.contants.SpiderConstant;
+import com.czeta.onlinejudgecore.utils.spider.consts.SpiderConstant;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequest;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequestBody;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.data.util.Pair;
 
 

@@ -39,6 +39,5 @@ public class SubmitConsumer {
                 consumerAsyncTask.task(submitMessage);
             }
         }
-
     }
 }

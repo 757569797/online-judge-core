@@ -2,7 +2,7 @@ package com.czeta.onlinejudgecore.utils.spider;
 
 import com.czeta.onlinejudge.enums.BaseStatusMsg;
 import com.czeta.onlinejudgecore.exception.SpiderRuntimeException;
-import com.czeta.onlinejudgecore.utils.spider.contants.SpiderConstant;
+import com.czeta.onlinejudgecore.utils.spider.consts.SpiderConstant;
 import com.czeta.onlinejudgecore.utils.spider.processor.SpiderPageProcessor;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequest;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequestBody;

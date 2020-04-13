@@ -37,7 +37,7 @@ public class ConsumerAsyncTask {
     public void task(SubmitMessage submitMessage) {
         log.info("current thread Id={}", Thread.currentThread().getId());
         // 获取评测结果
-        SubmitResultModel submitResultModel = new SubmitResultModel();
+        SubmitResultModel submitResultModel;
         if (submitMessage.getJudgeType().equals(JudgeTypeEnum.JUDGE_SPIDER.getCode())) {
             submitResultModel = spiderClient.execute(submitMessage);
         } else if (submitMessage.getJudgeType().equals(JudgeTypeEnum.JUDGE_MACHINE.getCode())) {

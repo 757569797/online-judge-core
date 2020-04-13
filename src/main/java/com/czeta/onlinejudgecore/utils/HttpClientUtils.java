@@ -7,6 +7,6 @@ package com.czeta.onlinejudgecore.utils;
  * @Date 2020/4/4 11:25
  * @Version 1.0
  */
-public class NullUtils {
+public class HttpClientUtils {
 
 }

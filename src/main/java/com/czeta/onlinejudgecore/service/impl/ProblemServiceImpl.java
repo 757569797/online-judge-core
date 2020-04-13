@@ -132,6 +132,7 @@ public class ProblemServiceImpl implements ProblemService {
         submit.setTime(submitResult.getTime());
         submit.setMemory(submitResult.getMemory());
         submit.setSubmitStatus(submitResult.getSubmitStatus());
+        submit.setMsg(submitResult.getMsgJson());
         submitMapper.updateById(submit);
     }
 }
