@@ -49,7 +49,11 @@ public class JudgeServiceImpl implements JudgeService {
         updatedJudgeType.setStatus(JudgeServerStatus.NORMAL.getCode());
         updatedJudgeType.setHostname(heartbeatModel.getHostname());
         updatedJudgeType.setCpuCore(Short.valueOf(heartbeatModel.getCpu_core()));
-        updatedJudgeType.setTaskNumber(Short.valueOf(heartbeatModel.getRunning_task_number()));
+        if (heartbeatModel.getRunning_task_number() == null) {
+            updatedJudgeType.setTaskNumber((short) 1);
+        } else {
+            updatedJudgeType.setTaskNumber(Short.valueOf(heartbeatModel.getRunning_task_number()));
+        }
         updatedJudgeType.setCpuUsage(heartbeatModel.getCpu());
         updatedJudgeType.setMemoryUsage(heartbeatModel.getMemory());
         updatedJudgeType.setVisitToken(judgeServerToken);

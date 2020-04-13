@@ -83,10 +83,7 @@ public class QDOJMachineServiceImpl extends AbstractMachineService {
             IOUtils.copy(response.getEntity().getContent(), writer, StandardCharsets.UTF_8.name());
             JSONObject responseJson = JSONObject.parseObject(writer.toString());
             // 获取结果分析并返回
-            System.out.println("submitMessage response=" + JSONObject.toJSONString(responseJson, SerializerFeature.WriteMapNullValue));
             submitResultModel = new SubmitResultModel();
-            submitResultModel.setSubmitId(submitMessage.getSubmitId());
-            submitResultModel.setProblemId(submitMessage.getProblemId());
             JSONObject msgCode = new JSONObject();
             msgCode.put("code", submitMessage.getCode());
             if (responseJson.get("err") != null) { // 特例
@@ -113,17 +110,16 @@ public class QDOJMachineServiceImpl extends AbstractMachineService {
                     msgItem.put("case_id", oneCase.get("test_case"));
                     msgItem.put("status", resultCodeToStatusMap.get(oneCase.get("result")));
                     msgItem.put("memory", (long) (int) oneCase.get("memory") / 1024 + "K");
-                    msgItem.put("cpu_time", (long) (int) oneCase.get("cpu_time") + "ms");
-                    msgItem.put("real_time", (long) (int) oneCase.get("real_time") + "ms");
+                    msgItem.put("cpu_time", (long) (int) oneCase.get("cpu_time") + "MS");
+                    msgItem.put("real_time", (long) (int) oneCase.get("real_time") + "MS");
                     msgArray.add(msgItem);
                 }
                 submitResultModel.setSubmitStatus(resultCodeToStatusMap.get(finalResult));
-                submitResultModel.setTime(maxTime + "ms");
+                submitResultModel.setTime(maxTime + "MS");
                 submitResultModel.setMemory(maxMemory / 1024 + "K");
                 msgCode.put("msg", JSONObject.toJSONString(msgArray));
                 submitResultModel.setMsgJson(msgCode.toJSONString());
             }
-            System.out.println("submitResultModel=" + JSONObject.toJSONString(submitResultModel));
         } finally {
             if (httpClient != null) {
                 httpClient.close();
