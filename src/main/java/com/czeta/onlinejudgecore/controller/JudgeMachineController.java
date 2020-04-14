@@ -43,43 +43,43 @@ public class JudgeMachineController {
 
 
 
-    @PostMapping("/testCompileSpj")
-    public void testCompileSpj(@RequestParam String code) {
-//        code = code.replaceAll("\r\n", "\n");
-        code = Base64.decodeToString(code);
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        CloseableHttpResponse response = null;
-        try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("src", code);
-            // 临时compile应该是随机数
-            String md5 = Md5Crypt.md5Crypt(("C" + code).getBytes("utf-8"));
-            jsonObject.put("spj_version", md5);
-            JSONObject jsonObject1 = JudgeMachineConst.getSpjCompileConfigByName("C");
-            jsonObject.put("spj_compile_config", jsonObject1);
-
-            SpiderRequestBody spiderRequestBody = SpiderRequestBody.json(JSONObject.toJSONString(jsonObject), "utf-8");
-            ByteArrayEntity entity =  new ByteArrayEntity(spiderRequestBody.getBody(), spiderRequestBody.getContentType());
-            HttpPost httpPost = new HttpPost("http://121.36.27.155:8080/compile_spj");
-            httpPost.setEntity(entity);
-            httpPost.addHeader("X-Judge-Server-Token", "93cf7ef4deb5e55d16f8a0f7ed9e18065800c0153dbc33402bc4820dbe1238c3");
-            response = httpClient.execute(httpPost);
-            SpiderResponse spiderResponse = SpiderResponse.build(null, response);
-            System.out.println(JSONObject.toJSONString(spiderResponse.getJsonObject()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                // 释放资源
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-                if (response != null) {
-                    response.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    @PostMapping("/testCompileSpj")
+//    public void testCompileSpj(@RequestParam String code) {
+////        code = code.replaceAll("\r\n", "\n");
+//        code = Base64.decodeToString(code);
+//        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+//        CloseableHttpResponse response = null;
+//        try {
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("src", code);
+//            // 临时compile应该是随机数
+//            String md5 = Md5Crypt.md5Crypt(("C" + code).getBytes("utf-8"));
+//            jsonObject.put("spj_version", md5);
+//            JSONObject jsonObject1 = JudgeMachineConst.getSpjCompileConfigByName("C");
+//            jsonObject.put("spj_compile_config", jsonObject1);
+//
+//            SpiderRequestBody spiderRequestBody = SpiderRequestBody.json(JSONObject.toJSONString(jsonObject), "utf-8");
+//            ByteArrayEntity entity =  new ByteArrayEntity(spiderRequestBody.getBody(), spiderRequestBody.getContentType());
+//            HttpPost httpPost = new HttpPost("http://121.36.27.155:8080/compile_spj");
+//            httpPost.setEntity(entity);
+//            httpPost.addHeader("X-Judge-Server-Token", "93cf7ef4deb5e55d16f8a0f7ed9e18065800c0153dbc33402bc4820dbe1238c3");
+//            response = httpClient.execute(httpPost);
+//            SpiderResponse spiderResponse = SpiderResponse.build(null, response);
+//            System.out.println(JSONObject.toJSONString(spiderResponse.getJsonObject()));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                // 释放资源
+//                if (httpClient != null) {
+//                    httpClient.close();
+//                }
+//                if (response != null) {
+//                    response.close();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }
