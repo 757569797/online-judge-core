@@ -73,14 +73,17 @@ public class JudgeServiceImpl implements JudgeService {
             judgeTypeMapper.insert(updatedJudgeType);
         } else {
             // 更新旧实例心跳
-            judgeTypeMapper.update(updatedJudgeType, Wrappers.<JudgeType>lambdaQuery()
-                    .eq(JudgeType::getHostname, heartbeatModel.getHostname()));
+            if (oldJudgeType.getStatus().equals(JudgeServerStatus.ABNORMAL.getCode())) {
+                judgeTypeMapper.update(updatedJudgeType, Wrappers.<JudgeType>lambdaQuery()
+                        .eq(JudgeType::getHostname, heartbeatModel.getHostname()));
+            }
         }
     }
 
     @Scheduled(fixedRate = 1000*60*60*24)
     @Override
     public void initJudgeSpiderByAnnotationScanTask() {
+        log.info("JudgeServiceImpl initJudgeSpiderByAnnotationScanTask scheduled...");
         if (first) {
             return;
         }

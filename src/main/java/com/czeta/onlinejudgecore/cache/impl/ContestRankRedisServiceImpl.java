@@ -3,7 +3,7 @@ package com.czeta.onlinejudgecore.cache.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.czeta.onlinejudge.cache.model.CacheContestRankModel;
 import com.czeta.onlinejudge.cache.model.RankItemModel;
-import com.czeta.onlinejudge.cache.model.SubmitModel;
+import com.czeta.onlinejudge.cache.model.SubmitItemModel;
 import com.czeta.onlinejudge.consts.ContestRankRedisKeyConstant;
 import com.czeta.onlinejudge.consts.ContestRankScoreRule;
 import com.czeta.onlinejudge.dao.entity.*;
@@ -90,9 +90,9 @@ public class ContestRankRedisServiceImpl implements ContestRankRedisService {
             rankItemModel.setAcNum(solvedProblem == null ? rankItemModel.getAcNum() + 1 : rankItemModel.getAcNum());
         }
         Long totalTime = rankItemModel.getTotalTime();
-        Map<Long, SubmitModel> submitMap = rankItemModel.getSubmitMap();
+        Map<Long, SubmitItemModel> submitMap = rankItemModel.getSubmitMap();
         Contest contestInfo = contestMapper.selectById(contestId);
-        SubmitModel submitModel = submitMap.get(problemId);
+        SubmitItemModel submitModel = submitMap.get(problemId);
         if (ac) { // 正确答案
             if (solvedProblem == null) { // 尚未解决
                 submitModel.setAccept(true);
@@ -101,7 +101,7 @@ public class ContestRankRedisServiceImpl implements ContestRankRedisService {
                 // 累加先前可能有错误的次数而罚的时间
                 if (totalTime == 0) {
                     int totalErrorCount = 0;
-                    for (Map.Entry<Long, SubmitModel> entry : submitMap.entrySet()) {
+                    for (Map.Entry<Long, SubmitItemModel> entry : submitMap.entrySet()) {
                         totalErrorCount += entry.getValue().getErrorCount();
                     }
                     totalTime += (totalErrorCount * ContestRankScoreRule.SECOND_TIME_PENALTY);
@@ -174,7 +174,7 @@ public class ContestRankRedisServiceImpl implements ContestRankRedisService {
             newRankItemModel.setAcNum(0);
             newRankItemModel.setTotalTime(0l);
 
-            Map<Long, SubmitModel> submitMap = new LinkedHashMap<>();
+            Map<Long, SubmitItemModel> submitMap = new LinkedHashMap<>();
             List<Long> problemIds = problemMapper.selectList(Wrappers.<Problem>lambdaQuery()
                     .eq(Problem::getSourceId, cacheContestRankModel.getContestId())
                     .orderByAsc(Problem::getCrtTs))
@@ -182,7 +182,7 @@ public class ContestRankRedisServiceImpl implements ContestRankRedisService {
                     .map(Problem::getId)
                     .collect(Collectors.toList());
             for (Long id : problemIds) {
-                SubmitModel submitModel = new SubmitModel(id, false, false, null, 0);
+                SubmitItemModel submitModel = new SubmitItemModel(id, false, false, null, 0);
                 submitMap.put(id, submitModel);
             }
             newRankItemModel.setSubmitMap(submitMap);
@@ -191,12 +191,12 @@ public class ContestRankRedisServiceImpl implements ContestRankRedisService {
         }
     }
 
-    private Map<Long, SubmitModel> sortKeyOfMap(Map<Long, SubmitModel> map) {
-        List<Map.Entry<Long, SubmitModel>> list = new ArrayList<>(map.entrySet());
+    private Map<Long, SubmitItemModel> sortKeyOfMap(Map<Long, SubmitItemModel> map) {
+        List<Map.Entry<Long, SubmitItemModel>> list = new ArrayList<>(map.entrySet());
         // 按照题目ID升序（题目创建时间升序）
         Collections.sort(list, (o1, o2) -> (int) (o1.getKey() - o2.getKey()));
-        Map<Long, SubmitModel> ret = new LinkedHashMap<>();
-        for (Map.Entry<Long, SubmitModel> entry : list) {
+        Map<Long, SubmitItemModel> ret = new LinkedHashMap<>();
+        for (Map.Entry<Long, SubmitItemModel> entry : list) {
             ret.put(entry.getKey(), entry.getValue());
         }
         return ret;

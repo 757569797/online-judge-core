@@ -10,6 +10,7 @@ import com.czeta.onlinejudgecore.machine.AbstractMachineService;
 import com.czeta.onlinejudgecore.model.result.SubmitResultModel;
 import com.czeta.onlinejudgecore.mq.SubmitMessage;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequestBody;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -30,6 +31,7 @@ import java.util.Map;
  * @Date 2020/4/11 18:39
  * @Version 1.0
  */
+@Slf4j
 @JudgeMachineName(name = "QDJudgeServer")
 public class QDOJMachineServiceImpl extends AbstractMachineService {
 
@@ -94,6 +96,7 @@ public class QDOJMachineServiceImpl extends AbstractMachineService {
                 }
                 msgCode.put("msg", responseJson.get("data").toString());
                 submitResultModel.setMsgJson(msgCode.toJSONString());
+                log.info("QDOJMachineServiceImpl machineImplMethod msgJson = {}", msgCode.toJSONString());
             } else { // 通用
                 long maxTime = 0;
                 long maxMemory = 0;
