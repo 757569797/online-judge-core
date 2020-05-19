@@ -10,6 +10,7 @@ import com.czeta.onlinejudgecore.machine.AbstractMachineService;
 import com.czeta.onlinejudgecore.model.result.SubmitResultModel;
 import com.czeta.onlinejudgecore.mq.SubmitMessage;
 import com.czeta.onlinejudgecore.utils.spider.request.SpiderRequestBody;
+import com.czeta.onlinejudgecore.utils.spider.response.SpiderResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -81,9 +82,9 @@ public class QDOJMachineServiceImpl extends AbstractMachineService {
             httpPost.setEntity(entity);
             httpPost.addHeader("X-Judge-Server-Token", submitMessage.getVisitToken());
             response = httpClient.execute(httpPost);
-            StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer, StandardCharsets.UTF_8.name());
-            JSONObject responseJson = JSONObject.parseObject(writer.toString());
+            SpiderResponse spiderResponse = SpiderResponse.build(null, response);
+            JSONObject responseJson = spiderResponse.getJsonObject();
+            log.info("QDOJMachineServiceImpl machineImplMethod responseJson = {}", responseJson.toString());
             // 获取结果分析并返回
             submitResultModel = new SubmitResultModel();
             JSONObject msgCode = new JSONObject();

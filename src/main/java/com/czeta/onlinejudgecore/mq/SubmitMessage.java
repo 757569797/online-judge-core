@@ -14,7 +14,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Data
-public class  SubmitMessage {
+public class SubmitMessage {
     // 提交的评测ID
     Long submitId;
 

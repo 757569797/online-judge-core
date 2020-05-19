@@ -73,7 +73,7 @@ public class JudgeServiceImpl implements JudgeService {
             judgeTypeMapper.insert(updatedJudgeType);
         } else {
             // 更新旧实例心跳
-            if (oldJudgeType.getStatus().equals(JudgeServerStatus.ABNORMAL.getCode())) {
+            if (!oldJudgeType.getStatus().equals(JudgeServerStatus.STOPPED.getCode())) {
                 judgeTypeMapper.update(updatedJudgeType, Wrappers.<JudgeType>lambdaQuery()
                         .eq(JudgeType::getHostname, heartbeatModel.getHostname()));
             }
