@@ -40,6 +40,17 @@ docker-compose restart
 - environment.RSYNC_PASSWORD 和master主机的密码一致
 - environment.RSYNC_MASTER_ADDR 修改为master主机服务器IP
 
+# application.yml配置文件修改说明
+
+#### mysql
+mysql数据库链接修改为mysql所在服务器IP
+
+#### redis
+redis修改为redis所在服务器IP
+
+#### kafka
+kafka代理地址修改为部署的kafka集群IP
+
 # todolist
 -[ ] 提高竞赛实时排名数据的可用性（可能会出现服务器内存错误导致数据丢失）
 -[ ] 添加爬虫主动心跳探测
