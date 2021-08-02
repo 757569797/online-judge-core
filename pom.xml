@@ -33,7 +33,7 @@
         <commons-net.version>3.6</commons-net.version>
         <commons-pool2.version>2.7.0</commons-pool2.version>
         <commons-text.version>1.8</commons-text.version>
-        <commons-compress.version>1.19</commons-compress.version>
+        <commons-compress.version>1.21</commons-compress.version>
         <online-judge.version>0.1.0</online-judge.version>
     </properties>
 
