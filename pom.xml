@@ -17,7 +17,7 @@
     <properties>
         <java.version>1.8</java.version>
         <mybatis-plus-boot-starter.version>3.2.0</mybatis-plus-boot-starter.version>
-        <mysql.version>8.0.18</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <druid.version>1.1.20</druid.version>
         <disruptor.version>3.4.1</disruptor.version>
         <httpclient.version>4.5.6</httpclient.version>
